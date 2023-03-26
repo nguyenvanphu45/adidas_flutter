@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "757936200521",
+    "firebase_url": "https://adidasapp-32a6c-default-rtdb.firebaseio.com",
+    "project_id": "adidasapp-32a6c",
+    "storage_bucket": "adidasapp-32a6c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:757936200521:android:0c826789dd44a543a85898",
+        "android_client_info": {
+          "package_name": "com.example.adidas_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "757936200521-je4ff24q9dm5n9a4hvbp4ncg7i02121i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHebuL8E86iD9u44ynsvd3qI5AECCwuhc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "757936200521-je4ff24q9dm5n9a4hvbp4ncg7i02121i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "757936200521-8c46mu5rne9gq7dkad543umidv9o307u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.adidasApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
