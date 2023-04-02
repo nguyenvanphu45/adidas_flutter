@@ -31,7 +31,7 @@ class CardGrid extends StatelessWidget {
     String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
     return GestureDetector(
-      onTap: () => onPress,
+      onTap: onPress,
       child: Container(
           margin: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
         color: Color.fromRGBO(236, 239, 241, 1),

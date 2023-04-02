@@ -9,7 +9,7 @@ class DefaultElements {
   ];
 
   static ThemeData getTheme() {
-    Map<String, double> fontSize = {"xs": 12, "s": 14, "m": 20, "l": 24};
+    Map<String, double> fontSize = {"xs": 12, "s": 16, "m": 20, "l": 26};
 
     return ThemeData(
       primaryColor: black,

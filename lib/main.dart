@@ -1,5 +1,5 @@
 import 'package:adidas_app/Screens/cart.dart';
-import 'package:adidas_app/Screens/profile.dart';
+import 'package:adidas_app/Screens/checkLogin.dart';
 import 'package:adidas_app/utils/defaultElements.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
               children: [
                 const HomeScreen(),
                 const CartScreen(),
-                const ProfileScreen()
+                const CheckLogin()
               ],
             ),
             bottomNavigationBar: Container(

@@ -1,24 +1,24 @@
 import 'package:adidas_app/Components/customButton.dart';
-import 'package:adidas_app/Screens/Register.dart';
 import 'package:adidas_app/Screens/checkLogin.dart';
+import 'package:adidas_app/Screens/login.dart';
 import 'package:adidas_app/utils/defaultElements.dart';
-import 'package:adidas_app/utils/loginData.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -32,11 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool? check1 = false;
 
-  _LoginScreenState() {
-    data = LoginData.signIn;
-  }
-
-  void signIn() async {
+  void signUp() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
 
@@ -49,8 +45,10 @@ class _LoginScreenState extends State<LoginScreen> {
         });
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text, password: _passwordController.text);
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
 
       Navigator.pop(context);
 
@@ -103,31 +101,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 8),
-                          child: Text(
-                            "Đăng nhập".toUpperCase(),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 34,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 2),
-                          ),
-                        ),
-                        Text(
-                          "Bạn quên mật khẩu ?",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 1.6,
-                              decoration: TextDecoration.underline),
-                        )
-                      ],
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "Tạo tài khoản của bạn".toUpperCase(),
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 34,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 2),
+                      ),
                     ),
                     SizedBox(
                       height: 30,
@@ -141,24 +124,24 @@ class _LoginScreenState extends State<LoginScreen> {
                             textInputAction: TextInputAction.next,
                             cursorColor: Colors.black,
                             autovalidateMode:
-                            AutovalidateMode.onUserInteraction,
+                                AutovalidateMode.onUserInteraction,
                             validator: (email) =>
-                            email != null && !EmailValidator.validate(email)
-                                ? 'Enter a valid email'
-                                : null,
+                                email != null && !EmailValidator.validate(email)
+                                    ? 'Enter a valid email'
+                                    : null,
                           ),
                           TextFormField(
                             decoration:
-                            InputDecoration(labelText: "Mật khẩu *"),
+                                InputDecoration(labelText: "Mật khẩu *"),
                             controller: _passwordController,
                             textInputAction: TextInputAction.next,
                             cursorColor: Colors.black,
                             autovalidateMode:
-                            AutovalidateMode.onUserInteraction,
+                                AutovalidateMode.onUserInteraction,
                             validator: (value) =>
-                            value != null && value.length < 6
-                                ? 'Enter min 6 characters'
-                                : null,
+                                value != null && value.length < 6
+                                    ? 'Enter min 6 characters'
+                                    : null,
                           ),
                           SizedBox(height: 10,),
                           Container(
@@ -187,6 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10,),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 20),
                       child: Row(
@@ -204,14 +188,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           Expanded(
                             child: RichText(
                               text: new TextSpan(
-                                text: "Giữ đăng nhập cho tôi. ",
+                                text: "Tôi theo đây đồng ý việc chuyển giao, "
+                                    "chia sẻ, sử dụng, thu thập và tiết lộ thông "
+                                    "tin cá nhân của tôi cho các bên thứ ba được "
+                                    "quy định tại ",
                                 style: TextStyle(
                                     fontSize: 15,
                                     letterSpacing: 0.5,
                                     color: Colors.black),
                                 children: <TextSpan>[
                                   new TextSpan(
-                                    text: "Thêm thông tin",
+                                    text: "Chính sách bảo mật của adidas.",
                                     style: new TextStyle(
                                         fontSize: 15,
                                         letterSpacing: 0.5,
@@ -245,12 +232,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Text(''),
                               )),
                           CustomButton(
-                            text: "Đăng nhập",
+                            text: "Đăng ký",
                             icon: Icons.arrow_forward,
                             backgroundColor: Colors.black,
                             textColor: DefaultElements.white,
                             iconColor: DefaultElements.white,
-                            onPressed: () => signIn(),
+                            onPressed: () => signUp(),
                           )
                         ],
                       ),
@@ -258,7 +245,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Tạo tài khoản mới?',
+                        Text('Đã có tài khoản? ',
                             style: Theme.of(context).textTheme.titleSmall),
                         SizedBox(
                           height: 50,
@@ -267,10 +254,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => RegisterScreen()))
+                                      builder: (context) => LoginScreen()))
                             },
                             child: Text(
-                              "Đăng ký",
+                              "Đăng nhập",
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,

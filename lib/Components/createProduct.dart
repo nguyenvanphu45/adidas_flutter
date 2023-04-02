@@ -21,6 +21,7 @@ class _CreateProductState extends State<CreateProduct> {
   final TextEditingController _imageController = TextEditingController();
   // final TextEditingController _typeController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
+  final TextEditingController _subDescController = TextEditingController();
 
   final _productss = FirebaseFirestore.instance.collection('products').doc();
 
@@ -80,6 +81,11 @@ class _CreateProductState extends State<CreateProduct> {
               controller: _descController,
               decoration: decoration('Description'),
             ),
+            const SizedBox(height: 24,),
+            TextField(
+              controller: _subDescController,
+              decoration: decoration('SubDescription'),
+            ),
             const SizedBox(height: 32,),
             ElevatedButton(
                 onPressed: () {
@@ -89,6 +95,7 @@ class _CreateProductState extends State<CreateProduct> {
                       // type: _typeController.text,
                       type: currentItemSelected,
                       description: _descController.text,
+                      subDescription: _subDescController.text,
                       price: _priceController.text,
                   );
 

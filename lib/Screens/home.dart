@@ -5,9 +5,7 @@ import 'package:adidas_app/Models/productModel.dart';
 import 'package:adidas_app/Screens/product.dart';
 import 'package:adidas_app/utils/defaultElements.dart';
 import 'package:adidas_app/utils/firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:adidas_app/utils/data.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -61,7 +59,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     onCardPress(Product product) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ProductScreen()));
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProductScreen(
+                    product: product,
+                  )
+          )
+      );
     }
 
     return Scaffold(
@@ -142,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       } else {
                         return Loader();
                       }
-                    })
+                    }),
               ],
             )
           ],

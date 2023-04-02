@@ -4,6 +4,7 @@ class Product {
   String name;
   String type;
   String description;
+  String subDescription;
   String price;
 
   Product({
@@ -12,6 +13,7 @@ class Product {
     required this.name,
     required this.type,
     required this.description,
+    required this.subDescription,
     required this.price
   });
 
@@ -21,6 +23,7 @@ class Product {
     'name': name,
     'type': type,
     'description': description,
+    'subdescription': subDescription,
     'price': price
   };
 
@@ -30,6 +33,7 @@ class Product {
       name: json['name'],
       type: json['type'],
       description: json['description'],
+      subDescription: json['subDescription'],
       price: json['price']
   );
 }

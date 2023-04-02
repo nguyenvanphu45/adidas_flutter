@@ -3,13 +3,14 @@ import 'package:adidas_app/Models/productModel.dart';
 class Cart extends Product {
   int count = 0;
   Cart(String id, String image, String name, String type, String description,
-      String price, this.count)
+      String subDescription, String price, this.count)
       : super(
             id: id,
             image: image,
             name: name,
             type: type,
             description: description,
+            subDescription: subDescription,
             price: price
   );
 
@@ -19,6 +20,7 @@ class Cart extends Product {
     'name': name,
     'type': type,
     'description': description,
+    'subDescription': subDescription,
     'price': price,
     'count': count
   };
@@ -29,6 +31,7 @@ class Cart extends Product {
       json['name'] as String,
       json['type'] as String,
       json['description'] as String,
+      json['subDescription'] as String,
       json['price'] as String,
       (json['count'] as num).toInt()
   );

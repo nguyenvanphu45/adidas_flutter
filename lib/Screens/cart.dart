@@ -1,4 +1,3 @@
-import 'package:adidas_app/utils/data.dart';
 import 'package:adidas_app/utils/defaultElements.dart';
 import 'package:flutter/material.dart';
 
