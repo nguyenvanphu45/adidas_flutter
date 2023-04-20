@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class Product {
   String id;
   String image;
@@ -5,7 +7,7 @@ class Product {
   String type;
   String description;
   String subDescription;
-  String price;
+  int price;
 
   Product({
     this.id = '',

@@ -1,6 +1,7 @@
 import 'package:adidas_app/Components/customButton.dart';
 import 'package:adidas_app/Screens/checkLogin.dart';
 import 'package:adidas_app/Screens/login.dart';
+import 'package:adidas_app/utils/Utils.dart';
 import 'package:adidas_app/utils/defaultElements.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,8 +18,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
 
   @override
   void dispose() {
@@ -57,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
 
-      showErrorMessage(e.code);
+      Utils.showSnackBar(e.code, Colors.red);
     }
   }
 

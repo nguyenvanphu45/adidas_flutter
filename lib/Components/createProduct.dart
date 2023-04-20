@@ -19,7 +19,6 @@ class _CreateProductState extends State<CreateProduct> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
-  // final TextEditingController _typeController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _subDescController = TextEditingController();
 
@@ -60,10 +59,6 @@ class _CreateProductState extends State<CreateProduct> {
               decoration: decoration('Image'),
             ),
             const SizedBox(height: 24,),
-            // TextField(
-            //   controller: _typeController,
-            //   decoration: decoration('Type'),
-            // ),
             DropdownButton<String>(
               items: listType.map((String dropDownStringItem) {
                 return DropdownMenuItem<String>(
@@ -96,7 +91,7 @@ class _CreateProductState extends State<CreateProduct> {
                       type: currentItemSelected,
                       description: _descController.text,
                       subDescription: _subDescController.text,
-                      price: _priceController.text,
+                      price: int.parse(_priceController.text),
                   );
 
                   createProduct(product);

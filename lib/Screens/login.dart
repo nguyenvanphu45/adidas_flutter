@@ -1,12 +1,15 @@
 import 'package:adidas_app/Components/customButton.dart';
 import 'package:adidas_app/Screens/Register.dart';
 import 'package:adidas_app/Screens/checkLogin.dart';
+import 'package:adidas_app/Screens/forgorPassword.dart';
+import 'package:adidas_app/provider/googleSignIn.dart';
+import 'package:adidas_app/utils/Utils.dart';
 import 'package:adidas_app/utils/defaultElements.dart';
-import 'package:adidas_app/utils/loginData.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -32,10 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool? check1 = false;
 
-  _LoginScreenState() {
-    data = LoginData.signIn;
-  }
-
   void signIn() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
@@ -54,25 +53,40 @@ class _LoginScreenState extends State<LoginScreen> {
 
       Navigator.pop(context);
 
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => CheckLogin()));
+      // Navigator.push(
+      //     context, MaterialPageRoute(builder: (context) => CheckLogin()));
+      Navigator.popUntil(context, ModalRoute.withName('/'));
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
 
-      showErrorMessage(e.code);
+      Utils.showSnackBar(e.code, Colors.red);
     }
   }
 
-  void showErrorMessage(String message) {
+  void signInGoole() async {
+    final provider = Provider.of<GoogleSignInProvider>(
+        context,
+        listen: false
+    );
+
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Center(
-              child: Text(message),
-            ),
+          return Center(
+            child: CircularProgressIndicator(),
           );
         });
+
+    try {
+      await provider.googleLogin();
+
+      Navigator.pop(context);
+      Navigator.popUntil(context, ModalRoute.withName('/'));
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+
+      Utils.showSnackBar(e.code, Colors.red);
+    }
   }
 
   @override
@@ -118,15 +132,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                 letterSpacing: 2),
                           ),
                         ),
-                        Text(
-                          "Bạn quên mật khẩu ?",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 1.6,
-                              decoration: TextDecoration.underline),
-                        )
+                        GestureDetector(
+                          child: Text(
+                            "Bạn quên mật khẩu ?",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 1.6,
+                                decoration: TextDecoration.underline),
+                          ),
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(builder:
+                                  (context) => ForgotPasswordScreen()
+                              )
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(
@@ -297,7 +318,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           backgroundColor: DefaultElements.white,
                           textColor: Colors.black,
                           iconColor: Colors.blue,
-                          onPressed: () {},
+                          onPressed: () => signInGoole(),
                         ),
                         SizedBox(
                           height: 10,
@@ -311,7 +332,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         BorderRadius.all(Radius.zero)),
                                 side:
                                     BorderSide(width: 1, color: Colors.black)),
-                            onPressed: () {},
+                            onPressed: () => signInGoole(),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

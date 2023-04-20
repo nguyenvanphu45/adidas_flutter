@@ -16,10 +16,6 @@ class CardGrid extends StatelessWidget {
       required this.onPress})
       : super(key: key);
 
-  static const _locale = 'en';
-  String _formatNumber(String s) =>
-      NumberFormat.decimalPattern(_locale).format(int.parse(s));
-
   Future<void> _deleteProduct(String productId) async {
     final CollectionReference _productss =
     FirebaseFirestore.instance.collection('products');
@@ -29,6 +25,7 @@ class CardGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+    var formatter = NumberFormat.decimalPattern();
 
     return GestureDetector(
       onTap: onPress,
@@ -76,7 +73,7 @@ class CardGrid extends StatelessWidget {
                         color: DefaultElements.white,
                       ),
                       child: Text(
-                          "\₫${_formatNumber(product.price.replaceAll('.', ''))}",
+                        "\₫${formatter.format(product.price)}",
                           style: Theme.of(context).textTheme.labelSmall)),
                   Padding(
                     padding: EdgeInsets.only(left: 7),

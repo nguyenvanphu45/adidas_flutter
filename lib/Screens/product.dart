@@ -2,9 +2,12 @@ import 'package:adidas_app/Components/question.dart';
 import 'package:adidas_app/Components/rating.dart';
 import 'package:adidas_app/Models/productModel.dart';
 import 'package:adidas_app/utils/defaultElements.dart';
+import 'package:adidas_app/utils/firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ProductScreen extends StatefulWidget {
   final Product product;
@@ -25,14 +28,15 @@ class _ProductScreenState extends State<ProductScreen> {
       addButtonLoad = true;
     });
 
+    await FirestoreUtil.addToCart(
+        Provider.of(context, listen: false).user,
+        widget.product.id
+    );
+
     setState(() {
       addButtonLoad = false;
     });
   }
-
-  static const _locale = 'en';
-  String _formatNumber(String s) =>
-      NumberFormat.decimalPattern(_locale).format(int.parse(s));
 
   onBackHome() {
     Navigator.popUntil(context, ModalRoute.withName('/'));
@@ -40,6 +44,8 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var formatter = NumberFormat.decimalPattern();
+
     return Scaffold(
         body: Stack(
             children: [
@@ -153,9 +159,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       Row(
                                         children: [
                                           Text(
-                                            "\₫${_formatNumber(
-                                                widget.product.price.replaceAll('.', '')
-                                            )}",
+                                            "\₫${formatter.format(widget.product.price)}",
                                             style: Theme.of(context).textTheme.titleSmall,
                                           ),
                                           SizedBox(
