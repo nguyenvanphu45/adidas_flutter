@@ -1,5 +1,5 @@
 import 'package:adidas_app/Components/customButton.dart';
-import 'package:adidas_app/Screens/Register.dart';
+import 'package:adidas_app/Screens/register.dart';
 import 'package:adidas_app/Screens/checkLogin.dart';
 import 'package:adidas_app/Screens/forgorPassword.dart';
 import 'package:adidas_app/provider/googleSignIn.dart';
@@ -10,6 +10,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../utils/application_state.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -36,6 +38,10 @@ class _LoginScreenState extends State<LoginScreen> {
   bool? check1 = false;
 
   void signIn() async {
+    final provider = Provider.of<ApplicationState>(
+        context,
+        listen: false
+    );
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
 
@@ -48,13 +54,12 @@ class _LoginScreenState extends State<LoginScreen> {
         });
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text, password: _passwordController.text);
+      await provider.signIn(_emailController.text, _passwordController.text, (e) {
+        Utils.showSnackBar(e.code, Colors.red);
+      });
 
       Navigator.pop(context);
 
-      // Navigator.push(
-      //     context, MaterialPageRoute(builder: (context) => CheckLogin()));
       Navigator.popUntil(context, ModalRoute.withName('/'));
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
@@ -64,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void signInGoole() async {
-    final provider = Provider.of<GoogleSignInProvider>(
+    final provider = Provider.of<ApplicationState>(
         context,
         listen: false
     );

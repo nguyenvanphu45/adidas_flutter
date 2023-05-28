@@ -1,11 +1,14 @@
 import 'package:adidas_app/Components/customButton.dart';
 import 'package:adidas_app/Screens/checkLogin.dart';
 import 'package:adidas_app/Screens/login.dart';
+import 'package:adidas_app/provider/googleSignIn.dart';
 import 'package:adidas_app/utils/Utils.dart';
 import 'package:adidas_app/utils/defaultElements.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -16,13 +19,17 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
 
     super.dispose();
   }
@@ -49,10 +56,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password: _passwordController.text,
       );
 
+      addUserDetails(
+          _nameController.text.trim(),
+          _emailController.text.trim()
+      );
+
       Navigator.pop(context);
 
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => CheckLogin()));
+      Navigator.popUntil(context, ModalRoute.withName('/'));
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+
+      Utils.showSnackBar(e.code, Colors.red);
+    }
+  }
+
+  void addUserDetails(String name, String email) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'name': name,
+      'email': email,
+      'role': 1
+    });
+  }
+
+  void signUpGoogle() async {
+    final provider = Provider.of<GoogleSignInProvider>(
+        context,
+        listen: false
+    );
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
+    try {
+      await provider.googleLogin();
+      Navigator.pop(context);
+      Navigator.popUntil(context, ModalRoute.withName('/'));
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
 
@@ -111,12 +155,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             letterSpacing: 2),
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
                     Container(
                       child: Column(
                         children: [
+                          TextFormField(
+                            decoration: InputDecoration(labelText: "Tên *"),
+                            controller: _nameController,
+                            textInputAction: TextInputAction.next,
+                            cursorColor: Colors.black,
+                            autovalidateMode:
+                            AutovalidateMode.onUserInteraction,
+                            validator: null
+                          ),
                           TextFormField(
                             decoration: InputDecoration(labelText: "Email *"),
                             controller: _emailController,
@@ -141,6 +191,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 value != null && value.length < 6
                                     ? 'Enter min 6 characters'
                                     : null,
+                          ),
+                          TextFormField(
+                            decoration:
+                            InputDecoration(labelText: "Đặt lại mật khẩu *"),
+                            controller: _confirmPasswordController,
+                            textInputAction: TextInputAction.next,
+                            cursorColor: Colors.black,
+                            autovalidateMode:
+                            AutovalidateMode.onUserInteraction,
+                            validator: (value) =>
+                            value != null && value.length < 6
+                                ? 'Enter min 6 characters'
+                                : null,
                           ),
                           SizedBox(height: 10,),
                           Container(
@@ -297,7 +360,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         BorderRadius.all(Radius.zero)),
                                 side:
                                     BorderSide(width: 1, color: Colors.black)),
-                            onPressed: () {},
+                            onPressed: () => signUpGoogle(),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

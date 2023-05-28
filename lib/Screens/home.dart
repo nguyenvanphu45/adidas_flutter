@@ -3,6 +3,7 @@ import 'package:adidas_app/Components/createProduct.dart';
 import 'package:adidas_app/Components/loader.dart';
 import 'package:adidas_app/Models/productModel.dart';
 import 'package:adidas_app/Screens/product.dart';
+import 'package:adidas_app/Screens/search.dart';
 import 'package:adidas_app/utils/defaultElements.dart';
 import 'package:adidas_app/utils/firestore.dart';
 import 'package:flutter/material.dart';
@@ -96,9 +97,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   width: 15,
                 ),
-                Icon(
-                  Icons.search,
-                ),
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchScreen()));
+                    },
+                    icon: Icon(
+                      Icons.search,
+                      size: 30,
+                      color: Colors.black,
+                    )),
               ],
             ),
           )
@@ -127,6 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             GridView.builder(
                                 itemCount: snapshot.data?.length,
+                                physics: ScrollPhysics(),
                                 shrinkWrap: true,
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(

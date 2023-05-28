@@ -1,6 +1,7 @@
 import 'package:adidas_app/Components/buttonLabel.dart';
 import 'package:adidas_app/Components/customButton.dart';
 import 'package:adidas_app/provider/googleSignIn.dart';
+import 'package:adidas_app/utils/application_state.dart';
 import 'package:adidas_app/utils/defaultElements.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -68,13 +69,13 @@ class Setting extends StatelessWidget {
             textColor: DefaultElements.white,
             iconColor: DefaultElements.white,
             onPressed: () {
-              final provider = Provider.of<GoogleSignInProvider>(
+              final provider = Provider.of<ApplicationState>(
                   context,
                   listen: false
               );
              (user == "({google.com})") ?
-                provider.logout() :
-                FirebaseAuth.instance.signOut();
+                provider.signOutGG() :
+                provider.signOut();
             },
           )
         ],

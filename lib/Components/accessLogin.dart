@@ -62,8 +62,8 @@ class AccessLogin extends StatelessWidget {
                     ),
                     onPressed: () => onLogin(),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'Đăng nhập'.toUpperCase(),

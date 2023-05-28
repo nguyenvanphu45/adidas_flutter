@@ -1,13 +1,16 @@
 import 'package:adidas_app/Components/question.dart';
 import 'package:adidas_app/Components/rating.dart';
 import 'package:adidas_app/Models/productModel.dart';
+import 'package:adidas_app/utils/Utils.dart';
 import 'package:adidas_app/utils/defaultElements.dart';
 import 'package:adidas_app/utils/firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../utils/application_state.dart';
 
 class ProductScreen extends StatefulWidget {
   final Product product;
@@ -18,6 +21,8 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
+  final user = FirebaseAuth.instance.currentUser!;
+
   bool addButtonLoad = false;
 
   List<String> listSize = ["3.5 UK", "4 UK", "4.5 UK", "5 UK", "5.5 UK", "6 UK",
@@ -27,12 +32,18 @@ class _ProductScreenState extends State<ProductScreen> {
     setState(() {
       addButtonLoad = true;
     });
-
-    await FirestoreUtil.addToCart(
-        Provider.of(context, listen: false).user,
-        widget.product.id
-    );
-
+    try {
+      await FirestoreUtil.addToCart(
+          Provider
+              .of<ApplicationState>(context, listen: false)
+              .user,
+          widget.product.id
+      );
+      Utils.showSnackBar('Đã thêm vào giỏ'
+          , Colors.green);
+    } catch(e) {
+      Utils.showSnackBar(e.toString(), Colors.red);
+    }
     setState(() {
       addButtonLoad = false;
     });
@@ -112,27 +123,6 @@ class _ProductScreenState extends State<ProductScreen> {
                     delegate: SliverChildListDelegate([
                       Column(crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Stack(children: [
-                            //   SizedBox(
-                            //     height: 300,
-                            //     width: double.infinity,
-                            //     child: Image.network(
-                            //       widget.product.image,
-                            //       fit: BoxFit.cover,
-                            //     ),
-                            //   ),
-                            //   Positioned(
-                            //       right: 8.0,
-                            //       top: 12.0,
-                            //       child: IconButton(
-                            //         icon: const Icon(
-                            //           Icons.clear,
-                            //           size: 30,
-                            //         ),
-                            //         onPressed: () => onBackHome(),
-                            //       )),
-                            // ]
-                            // ),
                             Stack(
                               children: [
                                 Container(
@@ -259,7 +249,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               child: Column(
                                 children: [
                                   OutlinedButton(
-                                    onPressed: null,
+                                    onPressed: onAddToCart,
                                     style: OutlinedButton.styleFrom(
                                       side:
                                       BorderSide(width: 0.5, color: DefaultElements.black),
@@ -386,7 +376,6 @@ class _ProductScreenState extends State<ProductScreen> {
                       )
                     ]),
                   )
-
                 ],
               )
             ]

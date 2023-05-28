@@ -1,13 +1,10 @@
 import 'dart:math';
 
-import 'package:adidas_app/Components/customButton.dart';
 import 'package:adidas_app/Components/profiles/account.dart';
 import 'package:adidas_app/Components/profiles/setting.dart';
-import 'package:adidas_app/provider/googleSignIn.dart';
-import 'package:adidas_app/utils/defaultElements.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -20,6 +17,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
 
     String generateRandomString(int len) {
       var r = Random();
@@ -43,18 +41,30 @@ class _ProfileState extends State<Profile> {
             padding: const EdgeInsets.all(30.0),
             child: Row(
               children: [
-                Container(
-                  height: 60,
-                  width: 60,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 1, color: Colors.black)
-                  ),
-                  child: Icon(
-                    Icons.person,
-                    size: 40,
-                  ),
-                ),
+                user.photoURL != null
+                    ? Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: NetworkImage('${user.photoURL}'),
+                            fit: BoxFit.cover
+                          )
+                        ),
+                    )
+                    : Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(width: 1, color: Colors.black),
+                      ),
+                      child: Icon(
+                          Icons.person,
+                          size: 40,
+                        )
+                    ),
                 SizedBox(
                   width: 16,
                 ),
@@ -64,7 +74,9 @@ class _ProfileState extends State<Profile> {
                     Row(
                       children: [
                         Text(
-                          generateRandomString(10),
+                          user.displayName != null
+                              ? '${user.displayName}'
+                              : generateRandomString(10),
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w800,
@@ -130,7 +142,7 @@ class _ProfileState extends State<Profile> {
                 child: TabBarView(
                     children: [
                       Account(),
-                      Center(child: Text('asdfnasdf'),),
+                      Center(child: Text('${user}'),),
                       Setting(user: providerData),
                     ]
                 ),

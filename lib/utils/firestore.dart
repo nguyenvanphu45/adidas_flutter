@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class FirestoreUtil {
   static const String productCollection = 'products';
+  static const String userCollection = 'users';
   static const String customerCollection = 'customers';
   static const String cartCollection = 'cart';
 
@@ -39,13 +40,13 @@ class FirestoreUtil {
     if (user == null) return;
     try {
       DocumentReference<Map<String, dynamic>> product = FirebaseFirestore.instance
-          .collection(customerCollection)
+          .collection(userCollection)
           .doc(user.uid)
           .collection(cartCollection)
           .doc(productId);
 
       if ((await product.get()).exists) {
-        product.update({'count: ': FieldValue.increment(1)});
+        product.update({'count': FieldValue.increment(1)});
       } else {
         product.set({'id': productId, 'count': 1});
       }
@@ -58,7 +59,7 @@ class FirestoreUtil {
     List<Cart> carts = [];
     try {
       final cartRef = await FirebaseFirestore.instance
-          .collection(customerCollection)
+          .collection(userCollection)
           .doc(user?.uid)
           .collection(cartCollection)
           .get();
@@ -79,8 +80,8 @@ class FirestoreUtil {
     return carts;
   }
 
-  static double getCartTotal(List<Cart> carts) {
-    double total = 0;
+  static int getCartTotal(List<Cart> carts) {
+    int total = 0;
     for (Cart cart in carts) {
       total += cart.price * cart.count;
     }
